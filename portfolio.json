@@ -1,0 +1,9 @@
+{
+  "stocks": [
+    { "ticker": "AAPL", "shares": 10, "avg_cost": 150.00 },
+    { "ticker": "TSLA", "shares": 5,  "avg_cost": 220.00 },
+    { "ticker": "NVDA", "shares": 8,  "avg_cost": 400.00 },
+    { "ticker": "MSFT", "shares": 6,  "avg_cost": 310.00 },
+    { "ticker": "AMZN", "shares": 4,  "avg_cost": 175.00 }
+  ]
+}
