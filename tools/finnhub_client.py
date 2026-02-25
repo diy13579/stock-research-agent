@@ -16,6 +16,8 @@ def get_company_news(ticker: str, days: int = 7) -> list[dict]:
             _from=start.strftime("%Y-%m-%d"),
             to=end.strftime("%Y-%m-%d"),
         )
+        if not news:
+            raise ValueError("Empty response from Finnhub")
         return [
             {
                 "headline": item.get("headline", ""),
@@ -25,10 +27,11 @@ def get_company_news(ticker: str, days: int = 7) -> list[dict]:
                 if item.get("datetime")
                 else "",
             }
-            for item in (news or [])[:6]
+            for item in news[:6]
         ]
-    except Exception as e:
-        return [{"error": str(e)}]
+    except Exception:
+        from tools.yfinance_client import get_company_news as _yf_news
+        return _yf_news(ticker, days=days)
 
 
 def get_analyst_recommendations(ticker: str) -> dict:

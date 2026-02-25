@@ -1,4 +1,24 @@
 import yfinance as yf
+from datetime import datetime
+
+
+def get_company_news(ticker: str, days: int = 7) -> list[dict]:
+    try:
+        stock = yf.Ticker(ticker)
+        news = stock.news or []
+        return [
+            {
+                "headline": item.get("content", {}).get("title", ""),
+                "summary": (item.get("content", {}).get("summary", "") or "")[:400],
+                "source": item.get("content", {}).get("provider", {}).get("displayName", ""),
+                "datetime": datetime.fromtimestamp(
+                    item.get("content", {}).get("pubDate", 0) or 0
+                ).strftime("%Y-%m-%d") if item.get("content", {}).get("pubDate") else "",
+            }
+            for item in news[:6]
+        ]
+    except Exception as e:
+        return [{"error": str(e)}]
 
 
 def get_stock_context(ticker: str) -> dict:
