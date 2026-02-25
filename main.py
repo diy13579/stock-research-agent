@@ -34,6 +34,22 @@ async def main():
         *[research_with_limit(stock) for stock in stocks]
     )
 
+    # ── Top News Summary ─────────────────────────────────────────
+    print("\n" + "=" * 60)
+    print("  TOP NEWS")
+    print("=" * 60)
+    for result in research_results:
+        ticker = result["ticker"]
+        news = result.get("recent_news", [])
+        valid = [n for n in news if n.get("headline")]
+        print(f"\n{ticker}")
+        if not valid:
+            print("  No news available.")
+        for item in valid:
+            date = f"[{item['datetime']}] " if item.get("datetime") else ""
+            source = f" ({item['source']})" if item.get("source") else ""
+            print(f"  • {date}{item['headline']}{source}")
+
     # ── Step 2: Aggregate ────────────────────────────────────────
     print("\n[2/3] Aggregating findings...")
     aggregated = await aggregate_research(stocks, research_results)
