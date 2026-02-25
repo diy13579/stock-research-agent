@@ -71,7 +71,7 @@ async def run_and_post(trigger: str = "scheduled"):
         bot.send_card(chat_id, formatter.build_error_card(str(exc), trigger=trigger))
 
 
-def main():
+async def _async_main():
     cron_expr = os.environ.get("SCHEDULE_CRON", "0 9 * * 1-5")
     tz = os.environ.get("SCHEDULE_TZ", "Asia/Shanghai")
 
@@ -83,10 +83,17 @@ def main():
     scheduler.start()
 
     try:
-        asyncio.get_event_loop().run_forever()
+        await asyncio.Event().wait()  # run forever
     except (KeyboardInterrupt, SystemExit):
         print("[scheduler] Shutting down.")
         scheduler.shutdown()
+
+
+def main():
+    try:
+        asyncio.run(_async_main())
+    except (KeyboardInterrupt, SystemExit):
+        pass
 
 
 if __name__ == "__main__":
